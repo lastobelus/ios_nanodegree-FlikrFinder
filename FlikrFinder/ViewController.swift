@@ -28,7 +28,7 @@ class ViewController: UIViewController {
     // Dispose of any resources that can be recreated.
   }
 
-  @IBAction func performNameSeach(sender: UIButton) {
+  @IBAction func performPhraseSeach(sender: UIButton) {
   }
 
   @IBAction func performGeoSearch(sender: UIButton) {

@@ -52,7 +52,7 @@
                                                 <size key="titleShadowOffset" width="1" height="1"/>
                                                 <state key="normal" image="Search"/>
                                                 <connections>
-                                                    <action selector="performNameSeach:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hc9-dr-0xp"/>
+                                                    <action selector="performPhraseSeach:" destination="BYZ-38-t0r" eventType="touchUpInside" id="157-s0-Evy"/>
                                                 </connections>
                                             </button>
                                         </subviews>
