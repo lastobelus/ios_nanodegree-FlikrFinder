@@ -187,6 +187,7 @@
 		2A69C0221BC5E18100D88EEB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0710;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Metafeat Apps";
 				TargetAttributes = {
@@ -483,6 +484,7 @@
 				2A69C0541BC5E18200D88EEB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		2A69C0551BC5E18200D88EEB /* Build configuration list for PBXNativeTarget "FlikrFinderTests" */ = {
 			isa = XCConfigurationList;
@@ -491,6 +493,7 @@
 				2A69C0571BC5E18200D88EEB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		2A69C0581BC5E18200D88EEB /* Build configuration list for PBXNativeTarget "FlikrFinderUITests" */ = {
 			isa = XCConfigurationList;
@@ -499,6 +502,7 @@
 				2A69C05A1BC5E18200D88EEB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
