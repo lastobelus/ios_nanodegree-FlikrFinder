@@ -14,6 +14,8 @@
 		2A69C0381BC5E18100D88EEB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2A69C0361BC5E18100D88EEB /* LaunchScreen.storyboard */; };
 		2A69C0431BC5E18200D88EEB /* FlikrFinderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69C0421BC5E18200D88EEB /* FlikrFinderTests.swift */; };
 		2A69C04E1BC5E18200D88EEB /* FlikrFinderUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A69C04D1BC5E18200D88EEB /* FlikrFinderUITests.swift */; };
+		2ABB5A771BD1C72300A7A88F /* FlikrAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB5A761BD1C72300A7A88F /* FlikrAPI.swift */; settings = {ASSET_TAGS = (); }; };
+		2ABB5A791BD1CBCE00A7A88F /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABB5A781BD1CBCE00A7A88F /* Util.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +49,8 @@
 		2A69C0491BC5E18200D88EEB /* FlikrFinderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FlikrFinderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A69C04D1BC5E18200D88EEB /* FlikrFinderUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlikrFinderUITests.swift; sourceTree = "<group>"; };
 		2A69C04F1BC5E18200D88EEB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2ABB5A761BD1C72300A7A88F /* FlikrAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlikrAPI.swift; sourceTree = "<group>"; };
+		2ABB5A781BD1CBCE00A7A88F /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +107,8 @@
 				2A69C0341BC5E18100D88EEB /* Assets.xcassets */,
 				2A69C0361BC5E18100D88EEB /* LaunchScreen.storyboard */,
 				2A69C0391BC5E18100D88EEB /* Info.plist */,
+				2ABB5A761BD1C72300A7A88F /* FlikrAPI.swift */,
+				2ABB5A781BD1CBCE00A7A88F /* Util.swift */,
 			);
 			path = FlikrFinder;
 			sourceTree = "<group>";
@@ -257,7 +263,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A69C0301BC5E18100D88EEB /* ViewController.swift in Sources */,
+				2ABB5A771BD1C72300A7A88F /* FlikrAPI.swift in Sources */,
 				2A69C02E1BC5E18100D88EEB /* AppDelegate.swift in Sources */,
+				2ABB5A791BD1CBCE00A7A88F /* Util.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
