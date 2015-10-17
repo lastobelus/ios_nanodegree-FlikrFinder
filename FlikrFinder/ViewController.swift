@@ -16,17 +16,6 @@ class ViewController: UIViewController {
   @IBOutlet weak var longitudeSearchTextField: UITextField!
   @IBOutlet weak var imageTitle: UILabel!
 
-
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    // Do any additional setup after loading the view, typically from a nib.
-  }
-
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-  }
-
   // MARK: Actions
   @IBAction func performPhraseSeach(sender: UIButton) {
     let urlSession = NSURLSession.sharedSession()
@@ -105,6 +94,57 @@ class ViewController: UIViewController {
   @IBAction func performGeoSearch(sender: UIButton) {
   }
 
-  
+  // MARK: Life Cycle
+
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    print("Initialize the tapRecognizer in viewDidLoad")
+  }
+
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    print("Add the tapRecognizer and subscribe to keyboard notifications in viewWillAppear")
+  }
+
+  override func viewWillDisappear(animated: Bool) {
+    super.viewWillDisappear(animated)
+    print("Remove the tapRecognizer and unsubscribe from keyboard notifications in viewWillDisappear")
+  }
+
+  // MARK: Show/Hide Keyboard
+
+  func addKeyboardDismissRecognizer() {
+    print("Add the recognizer to dismiss the keyboard")
+  }
+
+  func removeKeyboardDismissRecognizer() {
+    print("Remove the recognizer to dismiss the keyboard")
+  }
+
+  func handleSingleTap(recognizer: UITapGestureRecognizer) {
+    print("End editing here")
+  }
+
+  func subscribeToKeyboardNotifications() {
+    print("Subscribe to the KeyboardWillShow and KeyboardWillHide notifications")
+  }
+
+  func unsubscribeToKeyboardNotifications() {
+    print("Unsubscribe to the KeyboardWillShow and KeyboardWillHide notifications")
+  }
+
+  func keyboardWillShow(notification: NSNotification) {
+    print("Shift the view's frame up so that controls are shown")
+  }
+
+  func keyboardWillHide(notification: NSNotification) {
+    print("Shift the view's frame down so that the view is back to its original placement")
+  }
+
+  func getKeyboardHeight(notification: NSNotification) -> CGFloat {
+    print("Get and return the keyboard's height from the notification")
+    return 0.0
+  }
+
 }
 
