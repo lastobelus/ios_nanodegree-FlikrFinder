@@ -15,6 +15,9 @@ class ViewController: UIViewController {
   @IBOutlet weak var latitudeSearchTextField: UITextField!
   @IBOutlet weak var longitudeSearchTextField: UITextField!
   @IBOutlet weak var imageTitle: UILabel!
+//  var currentField:UITextField?
+
+  var tapRecognizer: UITapGestureRecognizer? = nil
 
   // MARK: Actions
   @IBAction func performPhraseSeach(sender: UIButton) {
@@ -98,46 +101,69 @@ class ViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    tapRecognizer = UITapGestureRecognizer(target: self, action: Selector("handleSingleTap:"))
+    tapRecognizer?.numberOfTapsRequired = 1
     print("Initialize the tapRecognizer in viewDidLoad")
   }
 
   override func viewWillAppear(animated: Bool) {
     super.viewWillAppear(animated)
-    print("Add the tapRecognizer and subscribe to keyboard notifications in viewWillAppear")
+    addKeyboardDismissRecognizer()
+    subscribeToKeyboardNotifications()
   }
 
   override func viewWillDisappear(animated: Bool) {
     super.viewWillDisappear(animated)
-    print("Remove the tapRecognizer and unsubscribe from keyboard notifications in viewWillDisappear")
+    unsubscribeToKeyboardNotifications()
+    removeKeyboardDismissRecognizer()
   }
 
   // MARK: Show/Hide Keyboard
 
   func addKeyboardDismissRecognizer() {
-    print("Add the recognizer to dismiss the keyboard")
+    print("add the recognizer to dismiss the keyboard")
+    view.addGestureRecognizer(tapRecognizer!)
   }
 
   func removeKeyboardDismissRecognizer() {
-    print("Remove the recognizer to dismiss the keyboard")
+    view.removeGestureRecognizer(tapRecognizer!)
   }
 
   func handleSingleTap(recognizer: UITapGestureRecognizer) {
-    print("End editing here")
+    print("handleSingleTap. state: \(recognizer.state.rawValue)")
+    if recognizer.state == .Ended {
+      print("tell view to resign")
+      view.endEditing(true)
+    }
   }
 
   func subscribeToKeyboardNotifications() {
-    print("Subscribe to the KeyboardWillShow and KeyboardWillHide notifications")
+    NSNotificationCenter.defaultCenter().addObserver(
+      self,
+      selector: "keyboardWillShow:",
+      name: UIKeyboardWillShowNotification,
+      object: nil
+    )
+    NSNotificationCenter.defaultCenter().addObserver(
+      self,
+      selector: "keyboardWillHide:",
+      name: UIKeyboardWillHideNotification,
+      object: nil
+    )
   }
 
   func unsubscribeToKeyboardNotifications() {
-    print("Unsubscribe to the KeyboardWillShow and KeyboardWillHide notifications")
+    NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
+    NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
   }
 
   func keyboardWillShow(notification: NSNotification) {
+    tapRecognizer!.enabled = true
     print("Shift the view's frame up so that controls are shown")
   }
 
   func keyboardWillHide(notification: NSNotification) {
+    tapRecognizer!.enabled = false
     print("Shift the view's frame down so that the view is back to its original placement")
   }
 
