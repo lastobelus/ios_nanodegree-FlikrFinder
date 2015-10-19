@@ -25,6 +25,7 @@ struct FlikrAPI {
     static let Method = "method"
     static let SafeSearch = "safe_search"
     static let Text = "text"
+    static let Bbox = "bbox"
     static let PhotosSearchResult = "photos"
     static let Extras = "extras"
     static let UrlExtra = "url_m"
@@ -32,7 +33,7 @@ struct FlikrAPI {
 
   let API_KEY = "ENTER_YOUR_API_KEY_HERE"
   let EXTRAS = "url_m"
-  let SAFE_SEARCH = "1"
+  let SAFE_SEARCH = "0"
   let DATA_FORMAT = "json"
   let NO_JSON_CALLBACK = "1"
   
@@ -54,12 +55,13 @@ struct FlikrAPI {
 //  let photoSearchURL = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=bcfc3a5c2a4d459719ce8efa1e2cf5d2&text=baby+asian+elephant&format=json&nojsoncallback=1"
 
 
-  func photos_search_request(search_text: String) -> NSURLRequest {
-    let options = [
-      FlikrAPI.Keys.Text: search_text,
+  func photos_search_request(searchOptions: [String:String]) -> NSURLRequest {
+    var options = [
       FlikrAPI.Keys.SafeSearch: "1",
       FlikrAPI.Keys.Extras: FlikrAPI.Keys.UrlExtra
     ]
+
+    options.unionByOverwriting(searchOptions)
 
     let url = method_url(
       method: FlikrAPI.Methods.PhotosSearch,

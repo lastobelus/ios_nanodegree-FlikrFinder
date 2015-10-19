@@ -8,6 +8,11 @@
 
 import UIKit
 
+struct Preferences {
+  static let LatitudeRadius:Double = 2
+  static let LongitudeRadius:Double = 2
+}
+
 class ViewController: UIViewController {
 
   @IBOutlet weak var imageView: UIImageView!
@@ -25,13 +30,43 @@ class ViewController: UIViewController {
 
   // MARK: Actions
   @IBAction func performPhraseSeach(sender: UIButton) {
-    let urlSession = NSURLSession.sharedSession()
-    let api = FlikrAPI()
     guard let searchText = nameSearchTextField.text where searchText.characters.count > 0 else {
       return
     }
+    makeSearchRequest([FlikrAPI.Keys.Text: searchText ])
+  }
 
-    let request = api.photos_search_request(searchText)
+  @IBAction func performGeoSearch(sender: UIButton) {
+    guard let lat = latitudeSearchTextField.text, long =  longitudeSearchTextField.text where (lat.characters.count > 0) || (long.characters.count > 0) else {
+      return
+    }
+    let bbox = bboxForLatitude(lat, andLongitude: long)
+    makeSearchRequest([FlikrAPI.Keys.Bbox: bbox ])
+  }
+
+  func bboxForLatitude(latitude:String, andLongitude longitude:String) -> String {
+    let lat =  Double(latitude) ?? 0.0
+    let long =  Double(longitude) ?? 0.0
+    return [
+      clampLongitude(long - Preferences.LongitudeRadius),
+      clampLatitude(lat - Preferences.LatitudeRadius),
+      clampLongitude(long + Preferences.LongitudeRadius),
+      clampLatitude(lat + Preferences.LatitudeRadius)
+      ].map {$0.description}.joinWithSeparator(",")
+  }
+
+  func clampLongitude(long:Double) -> Double {
+    return clamp(long , lower: -180, upper: 180)
+  }
+
+  func clampLatitude(lat:Double) -> Double {
+    return clamp(lat , lower: -90, upper: 90)
+  }
+
+  func makeSearchRequest(searchOptions:[String:String] ) {
+    let urlSession = NSURLSession.sharedSession()
+    let api = FlikrAPI()
+    let request = api.photos_search_request(searchOptions)
 
     print("made request: \(request.URL)")
     let dataTask = urlSession.dataTaskWithRequest(request, completionHandler: api.handleResult(request.URL!.absoluteString, completion: { json in
@@ -57,43 +92,11 @@ class ViewController: UIViewController {
         }
 
 
-        // get total photos
-        guard let perpage = (photosResult["perpage"] as? NSNumber) else {
-          print("Cannot find key 'perpage' in \(photosResult)")
-          return
-        }
+        print("total: \(total)  count: \(photos.count)")
 
-        print("total: \(total)  perpage: \(perpage)  count: \(photos.count)")
-
-        //      let total = photosResult["total"] as! UInt32
-        //      print("total: \(total)")
-        //      let photos = photosResult["photo"] as! [[String:AnyObject]]
         let ix = Int(arc4random_uniform(UInt32(photos.count)))
         let choice = photos[ix] as [String:AnyObject]
-
-        let photoTitle = choice["title"] as? String
-        dispatch_async(dispatch_get_main_queue()) {
-          self.imageTitle.text = photoTitle
-        }
-
-        guard let imageUrlString = choice[FlikrAPI.Keys.UrlExtra] as? String else {
-          print("can't find \(FlikrAPI.Keys.UrlExtra) in \(choice)")
-          return
-        }
-
-        print("imageUrlString: \(imageUrlString)")
-
-        let imageUrl = NSURL(string: imageUrlString)
-
-        if let imageData = NSData.init(contentsOfURL: imageUrl!) {
-          print("got image data")
-          let image = UIImage(data: imageData)
-          print("image: \(image)")
-          dispatch_async(dispatch_get_main_queue()) {
-            self.imageView.image = image
-          }
-        }
-
+        self.displayFoundImage(choice)
       }
     })
     )
@@ -102,7 +105,29 @@ class ViewController: UIViewController {
     dataTask.resume()
   }
 
-  @IBAction func performGeoSearch(sender: UIButton) {
+  func displayFoundImage(imageDictionary: [String:AnyObject]) {
+    let photoTitle = imageDictionary["title"] as? String
+    dispatch_async(dispatch_get_main_queue()) {
+      self.imageTitle.text = photoTitle
+    }
+
+    guard let imageUrlString = imageDictionary[FlikrAPI.Keys.UrlExtra] as? String else {
+      print("can't find \(FlikrAPI.Keys.UrlExtra) in \(imageDictionary)")
+      return
+    }
+
+    print("imageUrlString: \(imageUrlString)")
+
+    let imageUrl = NSURL(string: imageUrlString)
+
+    if let imageData = NSData.init(contentsOfURL: imageUrl!) {
+      print("got image data")
+      let image = UIImage(data: imageData)
+      print("image: \(image)")
+      dispatch_async(dispatch_get_main_queue()) {
+        self.imageView.image = image
+      }
+    }
   }
 
   // MARK: Life Cycle

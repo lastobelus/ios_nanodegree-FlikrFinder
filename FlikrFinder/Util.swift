@@ -16,3 +16,7 @@ extension Dictionary {
       }
   }
 }
+
+func clamp<T: Comparable>(value: T, lower: T, upper: T) -> T {
+  return min(max(value, lower), upper)
+}
