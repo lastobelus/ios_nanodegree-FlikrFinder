@@ -33,7 +33,7 @@ class ViewController: UIViewController {
     guard let searchText = nameSearchTextField.text where searchText.characters.count > 0 else {
       return
     }
-    makeSearchRequest([FlikrAPI.Keys.Text: searchText ])
+    searchAndDisplayRandomResult([FlikrAPI.Keys.Text: searchText ])
   }
 
   @IBAction func performGeoSearch(sender: UIButton) {
@@ -41,7 +41,7 @@ class ViewController: UIViewController {
       return
     }
     let bbox = bboxForLatitude(lat, andLongitude: long)
-    makeSearchRequest([FlikrAPI.Keys.Bbox: bbox ])
+    searchAndDisplayRandomResult([FlikrAPI.Keys.Bbox: bbox ])
   }
 
   func bboxForLatitude(latitude:String, andLongitude longitude:String) -> String {
@@ -63,7 +63,11 @@ class ViewController: UIViewController {
     return clamp(lat , lower: -90, upper: 90)
   }
 
-  func makeSearchRequest(searchOptions:[String:String] ) {
+  func searchAndDisplayRandomResult(searchOptions:[String:String] ) {
+    makeSearchRequest(searchOptions, completion: nil)
+  }
+
+  func makeSearchRequest(searchOptions:[String:String] , completion: (([String:AnyObject]) -> Void)?) {
     let urlSession = NSURLSession.sharedSession()
     let api = FlikrAPI()
     let request = api.photos_search_request(searchOptions)
