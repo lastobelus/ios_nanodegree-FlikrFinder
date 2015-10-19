@@ -33,13 +33,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="PEf-GN-uOp">
-                                <rect key="frame" x="16" y="318" width="288" height="83"/>
+                                <rect key="frame" x="16" y="318" width="288" height="88"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Jew-bp-Spa">
-                                        <rect key="frame" x="0.0" y="0.0" width="288" height="25"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Jew-bp-Spa">
+                                        <rect key="frame" x="0.0" y="0.0" width="288" height="30"/>
                                         <subviews>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Zv3-r9-qSv">
-                                                <rect key="frame" x="0.0" y="0.0" width="258" height="25"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="258" height="30"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
@@ -58,7 +58,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Epi-jR-2TM">
-                                        <rect key="frame" x="0.0" y="32" width="288" height="51"/>
+                                        <rect key="frame" x="0.0" y="37" width="288" height="51"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="5pE-na-bPO">
                                                 <rect key="frame" x="0.0" y="0.0" width="258" height="51"/>
@@ -141,6 +141,7 @@
                         <outlet property="latitudeSearchTextField" destination="7sU-Mq-pKU" id="d2y-Ip-cMx"/>
                         <outlet property="longitudeSearchTextField" destination="29R-Oo-OPr" id="KjI-ho-xBM"/>
                         <outlet property="nameSearchTextField" destination="Zv3-r9-qSv" id="aTp-oH-NKf"/>
+                        <outlet property="searchInterfaceStackView" destination="PEf-GN-uOp" id="45W-q8-Lfs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

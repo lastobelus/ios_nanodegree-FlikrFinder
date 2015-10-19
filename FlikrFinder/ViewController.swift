@@ -15,9 +15,13 @@ class ViewController: UIViewController {
   @IBOutlet weak var latitudeSearchTextField: UITextField!
   @IBOutlet weak var longitudeSearchTextField: UITextField!
   @IBOutlet weak var imageTitle: UILabel!
+  @IBOutlet weak var searchInterfaceStackView: UIStackView!
+
 //  var currentField:UITextField?
 
   var tapRecognizer: UITapGestureRecognizer? = nil
+  var currentKeyboardHeight: CGFloat = 0
+  var defaultViewFrame: CGRect!
 
   // MARK: Actions
   @IBAction func performPhraseSeach(sender: UIButton) {
@@ -104,6 +108,7 @@ class ViewController: UIViewController {
     tapRecognizer = UITapGestureRecognizer(target: self, action: Selector("handleSingleTap:"))
     tapRecognizer?.numberOfTapsRequired = 1
     print("Initialize the tapRecognizer in viewDidLoad")
+    defaultViewFrame = view.frame
   }
 
   override func viewWillAppear(animated: Bool) {
@@ -159,17 +164,26 @@ class ViewController: UIViewController {
 
   func keyboardWillShow(notification: NSNotification) {
     tapRecognizer!.enabled = true
-    print("Shift the view's frame up so that controls are shown")
+    currentKeyboardHeight = getKeyboardHeight(notification)
+    let spaceBelowSearchView = defaultViewFrame.height - searchInterfaceStackView.frame.origin.y - searchInterfaceStackView.frame.height
+    let delta:CGFloat = (currentKeyboardHeight != 0)  ?
+      currentKeyboardHeight - spaceBelowSearchView
+      : 0.0
+    view.frame.origin.y = defaultViewFrame.origin.y - delta
+    print("Shift the view's frame up to make room for keyboard")
   }
 
   func keyboardWillHide(notification: NSNotification) {
     tapRecognizer!.enabled = false
+    currentKeyboardHeight = 0
+    view.frame.origin.y = defaultViewFrame.origin.y
     print("Shift the view's frame down so that the view is back to its original placement")
   }
 
-  func getKeyboardHeight(notification: NSNotification) -> CGFloat {
-    print("Get and return the keyboard's height from the notification")
-    return 0.0
+  private func getKeyboardHeight(notification: NSNotification) -> CGFloat {
+    let userInfo = notification.userInfo
+    let keyboardSize = userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
+    return keyboardSize.CGRectValue().height
   }
 
 }
