@@ -24,7 +24,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="generic-image-placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="y8W-X7-Q0f">
-                                <rect key="frame" x="16" y="71" width="288" height="227"/>
+                                <rect key="frame" x="16" y="71" width="288" height="217"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ORn-3T-fXH">
                                 <rect key="frame" x="11" y="409" width="288" height="51"/>
@@ -33,7 +33,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="PEf-GN-uOp">
-                                <rect key="frame" x="16" y="318" width="288" height="88"/>
+                                <rect key="frame" x="16" y="308" width="288" height="88"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Jew-bp-Spa">
                                         <rect key="frame" x="0.0" y="0.0" width="288" height="30"/>
@@ -120,7 +120,7 @@
                         <color key="backgroundColor" red="0.090196078431372548" green="0.45098039215686275" blue="0.6588235294117647" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="a1R-nR-H9L" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="4eY-kv-7kz"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="y8W-X7-Q0f" secondAttribute="bottom" constant="182" id="5nY-V6-d9F"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="y8W-X7-Q0f" secondAttribute="bottom" constant="192" id="5nY-V6-d9F"/>
                             <constraint firstItem="a1R-nR-H9L" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="CGz-CC-NRQ"/>
                             <constraint firstItem="PEf-GN-uOp" firstAttribute="top" secondItem="y8W-X7-Q0f" secondAttribute="bottom" constant="20" id="IHx-jS-LzW"/>
                             <constraint firstItem="ORn-3T-fXH" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-5" id="LHa-pV-yuc"/>

@@ -11,12 +11,14 @@ import Foundation
 struct FlikrAPI {
   static let Base = "https://api.flickr.com/services/rest/"
   static let APIKey = "bcfc3a5c2a4d459719ce8efa1e2cf5d2"
-  static let baseQueryItems = [
+  static let BaseQueryItems = [
     NSURLQueryItem(name: "api_key", value: APIKey),
     NSURLQueryItem(name: "format", value: "json"),
     NSURLQueryItem(name: "nojsoncallback", value: "1")
   ]
-
+  static let DefaultPerPage = 100
+  static let MaxPages = 41
+  
   struct Methods {
     static let PhotosSearch = "flickr.photos.search"
   }
@@ -29,6 +31,13 @@ struct FlikrAPI {
     static let PhotosSearchResult = "photos"
     static let Extras = "extras"
     static let UrlExtra = "url_m"
+    static let Page = "page"
+    static let PerPage = "per_page"
+  }
+
+  struct Errors {
+    static let Generic = "Fiickr API returned an unexpected result."
+    static let NoResults = "Flickr found no results for your query."
   }
 
   let API_KEY = "ENTER_YOUR_API_KEY_HERE"
@@ -36,12 +45,11 @@ struct FlikrAPI {
   let SAFE_SEARCH = "0"
   let DATA_FORMAT = "json"
   let NO_JSON_CALLBACK = "1"
-  
 
   func method_url(method method: String, withOptions options: [String:String]) -> NSURL {
     let url = NSURLComponents(string: FlikrAPI.Base)!
 
-    var queryItems = FlikrAPI.baseQueryItems
+    var queryItems = FlikrAPI.BaseQueryItems
     queryItems.append(NSURLQueryItem(name: FlikrAPI.Keys.Method, value: method))
     for (key, value) in options {
       queryItems.append(NSURLQueryItem(name: key, value: value))
@@ -58,7 +66,8 @@ struct FlikrAPI {
   func photos_search_request(searchOptions: [String:String]) -> NSURLRequest {
     var options = [
       FlikrAPI.Keys.SafeSearch: "1",
-      FlikrAPI.Keys.Extras: FlikrAPI.Keys.UrlExtra
+      FlikrAPI.Keys.Extras: FlikrAPI.Keys.UrlExtra,
+      FlikrAPI.Keys.PerPage: "\(FlikrAPI.DefaultPerPage)"
     ]
 
     options.unionByOverwriting(searchOptions)
@@ -72,6 +81,7 @@ struct FlikrAPI {
   }
 
   func handleResult(uri:String, completion: ([String:AnyObject]) -> Void)(data:NSData?, response:NSURLResponse?, error:NSError?) {
+    print("FlikrAPI.handleResult")
     guard error == nil else {
       print("error fetching url \(uri): \(error)")
       return

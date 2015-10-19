@@ -63,33 +63,59 @@ class ViewController: UIViewController {
     return clamp(lat , lower: -90, upper: 90)
   }
 
-  func searchAndDisplayRandomResult(searchOptions:[String:String] ) {
-    makeSearchRequest(searchOptions, completion: { total, photos in
-      print("total: \(total)  count: \(photos.count)")
+  func searchAndDisplayRandomResult( searchOptions:[String:String] ) {
+    makeSearchRequest(searchOptions,
+      completion: { total, pages, photos in
+        print("total: \(total)  pages: \(pages) count: \(photos.count)")
+        if pages == 1 {
+          self.displayRandomImageFromPhotos(photos)
+        } else {
+          let page = Int(arc4random_uniform(UInt32(min(pages, FlikrAPI.MaxPages))))
+          var pagedSearchOptions = searchOptions
+          pagedSearchOptions.unionByOverwriting([FlikrAPI.Keys.Page: "\(page)"])
 
-      let ix = Int(arc4random_uniform(UInt32(photos.count)))
-      let choice = photos[ix] as [String:AnyObject]
-      self.displayFoundImage(choice)
-    })
+          self.makeSearchRequest(pagedSearchOptions,
+            completion: { total, pages, photos in
+              self.displayRandomImageFromPhotos(photos)
+            },
+            error: self.displayError
+          )
+        }
+      },
+      error: displayError
+    )
   }
 
-  func makeSearchRequest(searchOptions:[String:String] , completion: ((Int, [[String:AnyObject]]) -> Void)?) {
+  func displayError(msg:String) {
+    dispatch_async(dispatch_get_main_queue()) {
+      self.imageTitle.text = msg
+    }
+  }
+
+  func makeSearchRequest(searchOptions:[String:String] , completion: ((total: Int, pages: Int, photos: [[String:AnyObject]]) -> Void)?, error: ((String) -> Void)?) {
     let urlSession = NSURLSession.sharedSession()
     let api = FlikrAPI()
     let request = api.photos_search_request(searchOptions)
 
-    print("made request: \(request.URL)")
     let dataTask = urlSession.dataTaskWithRequest(request, completionHandler: api.handleResult(request.URL!.absoluteString, completion: { json in
 
       // check for photos key
       guard let photosResult = json[FlikrAPI.Keys.PhotosSearchResult] as? [String:AnyObject] else {
         print("Cannot find keys 'photos' in \(json)")
+        error?(FlikrAPI.Errors.Generic)
         return
       }
 
       // get total photos
-      guard let total = (photosResult["total"] as? NSString)?.integerValue else {
+      guard let total = (photosResult["total"] as? HasNumber)?.integerValue else {
         print("Cannot find key 'total' in \(photosResult)")
+        error?(FlikrAPI.Errors.Generic)
+        return
+      }
+
+      guard let pages = (photosResult["pages"] as? HasNumber)?.integerValue else {
+        print("Cannot find key 'pages' in \(photosResult)")
+        error?(FlikrAPI.Errors.Generic)
         return
       }
 
@@ -98,18 +124,26 @@ class ViewController: UIViewController {
         /* GUARD: Is the "photo" key in photosDictionary? */
         guard let photos = photosResult["photo"] as? [[String: AnyObject]] else {
           print("Cannot find key 'photo' in \(photosResult)")
+          error?(FlikrAPI.Errors.Generic)
           return
         }
 
-        if let completion = completion {
-          completion(total, photos)
-        }
+        completion?(total: total, pages: pages, photos: photos)
+
+      } else {
+        print("total is 0")
+        error?(FlikrAPI.Errors.NoResults)
       }
     })
     )
 
-    print("tell dataTask to resume")
     dataTask.resume()
+  }
+
+  func displayRandomImageFromPhotos(photos: [[String:AnyObject]]) {
+    let ix = Int(arc4random_uniform(UInt32(FlikrAPI.DefaultPerPage)))
+    let choice = photos[ix] as [String:AnyObject]
+    self.displayFoundImage(choice)
   }
 
   func displayFoundImage(imageDictionary: [String:AnyObject]) {
@@ -120,17 +154,14 @@ class ViewController: UIViewController {
 
     guard let imageUrlString = imageDictionary[FlikrAPI.Keys.UrlExtra] as? String else {
       print("can't find \(FlikrAPI.Keys.UrlExtra) in \(imageDictionary)")
+      displayError(FlikrAPI.Errors.Generic)
       return
     }
-
-    print("imageUrlString: \(imageUrlString)")
 
     let imageUrl = NSURL(string: imageUrlString)
 
     if let imageData = NSData.init(contentsOfURL: imageUrl!) {
-      print("got image data")
       let image = UIImage(data: imageData)
-      print("image: \(image)")
       dispatch_async(dispatch_get_main_queue()) {
         self.imageView.image = image
       }
@@ -143,7 +174,6 @@ class ViewController: UIViewController {
     super.viewDidLoad()
     tapRecognizer = UITapGestureRecognizer(target: self, action: Selector("handleSingleTap:"))
     tapRecognizer?.numberOfTapsRequired = 1
-    print("Initialize the tapRecognizer in viewDidLoad")
     defaultViewFrame = view.frame
   }
 
@@ -162,7 +192,6 @@ class ViewController: UIViewController {
   // MARK: Show/Hide Keyboard
 
   func addKeyboardDismissRecognizer() {
-    print("add the recognizer to dismiss the keyboard")
     view.addGestureRecognizer(tapRecognizer!)
   }
 
@@ -171,7 +200,6 @@ class ViewController: UIViewController {
   }
 
   func handleSingleTap(recognizer: UITapGestureRecognizer) {
-    print("handleSingleTap. state: \(recognizer.state.rawValue)")
     if recognizer.state == .Ended {
       print("tell view to resign")
       view.endEditing(true)
@@ -206,14 +234,12 @@ class ViewController: UIViewController {
       currentKeyboardHeight - spaceBelowSearchView
       : 0.0
     view.frame.origin.y = defaultViewFrame.origin.y - delta
-    print("Shift the view's frame up to make room for keyboard")
   }
 
   func keyboardWillHide(notification: NSNotification) {
     tapRecognizer!.enabled = false
     currentKeyboardHeight = 0
     view.frame.origin.y = defaultViewFrame.origin.y
-    print("Shift the view's frame down so that the view is back to its original placement")
   }
 
   private func getKeyboardHeight(notification: NSNotification) -> CGFloat {
