@@ -64,10 +64,16 @@ class ViewController: UIViewController {
   }
 
   func searchAndDisplayRandomResult(searchOptions:[String:String] ) {
-    makeSearchRequest(searchOptions, completion: nil)
+    makeSearchRequest(searchOptions, completion: { total, photos in
+      print("total: \(total)  count: \(photos.count)")
+
+      let ix = Int(arc4random_uniform(UInt32(photos.count)))
+      let choice = photos[ix] as [String:AnyObject]
+      self.displayFoundImage(choice)
+    })
   }
 
-  func makeSearchRequest(searchOptions:[String:String] , completion: (([String:AnyObject]) -> Void)?) {
+  func makeSearchRequest(searchOptions:[String:String] , completion: ((Int, [[String:AnyObject]]) -> Void)?) {
     let urlSession = NSURLSession.sharedSession()
     let api = FlikrAPI()
     let request = api.photos_search_request(searchOptions)
@@ -95,12 +101,9 @@ class ViewController: UIViewController {
           return
         }
 
-
-        print("total: \(total)  count: \(photos.count)")
-
-        let ix = Int(arc4random_uniform(UInt32(photos.count)))
-        let choice = photos[ix] as [String:AnyObject]
-        self.displayFoundImage(choice)
+        if let completion = completion {
+          completion(total, photos)
+        }
       }
     })
     )
