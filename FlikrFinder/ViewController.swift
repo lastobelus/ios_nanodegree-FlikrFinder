@@ -27,7 +27,11 @@ class ViewController: UIViewController {
   @IBAction func performPhraseSeach(sender: UIButton) {
     let urlSession = NSURLSession.sharedSession()
     let api = FlikrAPI()
-    let request = api.photos_search_request("baby asian elephants")
+    guard let searchText = nameSearchTextField.text where searchText.characters.count > 0 else {
+      return
+    }
+
+    let request = api.photos_search_request(searchText)
 
     print("made request: \(request.URL)")
     let dataTask = urlSession.dataTaskWithRequest(request, completionHandler: api.handleResult(request.URL!.absoluteString, completion: { json in
